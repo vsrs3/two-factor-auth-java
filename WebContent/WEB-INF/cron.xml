@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/_appengine_ah/sessioncleanup?clear</url>
+    <description>hourly session cleanup job</description>
+    <schedule>every 1 hours</schedule>
+  </cron>
+</cronentries>

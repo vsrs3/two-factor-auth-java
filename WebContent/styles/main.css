@@ -1,0 +1,85 @@
+@charset "utf-8";
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body{color:#000000;background-color:#0054b8; margin:10;padding:5;font-size:120%;}
+
+/* Login page form styles */
+.form-ul li
+{
+    display:block;
+    list-style: none;
+}
+
+.form-ul label
+{
+	display:block;
+	font-weight:bold;
+}
+
+.form-ul input[type="email"], input[type="password"]
+{
+	width:75%;
+	margin: 5px 0px 5px 0px;
+}
+
+.form-ul input[type="submit"]
+{
+	margin:5px 0px 5px 0px;
+	font-weight:bold;
+	font-size:100%;
+}
+
+.webformdiv
+{
+	max-width:380px;
+	margin: 50px auto;
+	background-color:#c9dbf0;
+	padding:10px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #ffffff;
+	
+}
+
+.formheader
+{
+	margin: 10px;
+}
+
+.ch
+{
+	font-size:90%;
+}
+
+/*Style for footer */
+.bottom
+{
+	font-size:80%;
+	max-width:380px;
+    margin: 0 auto;
+    padding:5px;
+}
+
+/* Main body styles for each page */
+.mainbody
+{
+    max-width:80%;
+    margin: 30px auto;
+	background-color: #c9dbf0;
+    padding:5px;
+	border-radius:15px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #ffffff;
+}
+
+/* Status message div */
+.settingmsg
+{
+   color:#ff3f42;
+   font-weight:bold;
+}

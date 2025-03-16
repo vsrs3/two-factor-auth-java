@@ -4,6 +4,7 @@
       <root url="jar://$PROJECT_DIR$/out/artifacts/two_factor_auth_java_war_exploded/WEB-INF/lib/org.apache.taglibs.taglibs-standard-spec-1.2.5.jar!/" />
       <root url="jar://$PROJECT_DIR$/out/artifacts/two_factor_auth_java_war_exploded/WEB-INF/lib/org.apache.taglibs.taglibs-standard-impl-1.2.5.jar!/" />
       <root url="jar://$PROJECT_DIR$/out/artifacts/two_factor_auth_java_war_exploded/WEB-INF/lib/appengine-api-1.0-sdk-1.9.89.jar!/" />
+      <root url="jar://F:/Dowloads/MySQL_Connector/mysql-connector-j-9.2.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

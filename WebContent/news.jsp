@@ -41,32 +41,54 @@
     <link rel="stylesheet" type="text/css" href="styles/main.css">
     <title>News Board</title>
     <style>
-        .news-item {
-            border: 1px solid #ccc;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #f9f9f9;
-        }
-        .news-header {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
-        }
-        .news-content {
-            margin: 10px 0;
-            white-space: pre-wrap;
-        }
         .security-label {
             font-weight: bold;
             padding: 2px 5px;
             border-radius: 3px;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
         }
         .security-unclassified { background-color: #ddffdd; color: #006600; }
         .security-confidential { background-color: #ffffcc; color: #996600; }
         .security-secret { background-color: #ffdddd; color: #990000; }
         .security-topsecret { background-color: #ffaaaa; color: #660000; }
+
+        /* Table styles */
+        .news-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .news-table th {
+            background-color: #0054b8;
+            color: white;
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        .news-table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        .news-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .news-table tr:hover {
+            background-color: #e6e6e6;
+        }
+        .content-cell {
+            min-width: 250px;
+            white-space: pre-wrap;
+        }
+        .id-cell {
+            width: 40px;
+            text-align: center;
+        }
+        .author-cell, .date-cell, .label-cell {
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -137,16 +159,24 @@
     <% if (newsList == null || newsList.isEmpty()) { %>
     <p>No news items available.</p>
     <% } else { %>
-    <% for (NewsItem newsItem : newsList) { %>
-    <div class="news-item">
-        <div class="news-header">
-            <div>
-                <strong>Posted by:</strong> <%= HtmlEscape.escapeHTML(newsItem.getUserid()) %>
-                <span style="margin-left: 10px;">
-                            <strong>Date:</strong> <%= dateFormat.format(newsItem.getDate()) %>
-                        </span>
-            </div>
-            <div>
+    <table class="news-table">
+        <thead>
+        <tr>
+            <th class="id-cell">ID</th>
+            <th class="content-cell">Content</th>
+            <th class="author-cell">Author</th>
+            <th class="date-cell">Date</th>
+            <th class="label-cell">Security Level</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (NewsItem newsItem : newsList) { %>
+        <tr>
+            <td class="id-cell"><%= newsItem.getId() %></td>
+            <td class="content-cell"><%= HtmlEscape.escapeHTML(newsItem.getContent()) %></td>
+            <td class="author-cell"><%= HtmlEscape.escapeHTML(newsItem.getUserid()) %></td>
+            <td class="date-cell"><%= dateFormat.format(newsItem.getDate()) %></td>
+            <td class="label-cell">
                         <span class="security-label
                         <% if (newsItem.getSecurityLabel() == AppConstants.SECURITY_UNCLASSIFIED) { %>security-unclassified<% } %>
                         <% if (newsItem.getSecurityLabel() == AppConstants.SECURITY_CONFIDENTIAL) { %>security-confidential<% } %>
@@ -155,13 +185,11 @@
                         ">
                             <%= NewsDAO.getSecurityLabelName(newsItem.getSecurityLabel()) %>
                         </span>
-            </div>
-        </div>
-        <div class="news-content">
-            <%= HtmlEscape.escapeHTML(newsItem.getContent()) %>
-        </div>
-    </div>
-    <% } %>
+            </td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
     <% } %>
 
     <div style="margin-top: 20px;">

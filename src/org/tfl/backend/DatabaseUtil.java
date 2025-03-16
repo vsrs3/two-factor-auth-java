@@ -51,6 +51,31 @@ public class DatabaseUtil {
      * @param rs ResultSet
      */
     public static void closeResources(Connection conn, PreparedStatement stmt, ResultSet rs) {
-        // [Existing code to close resources]
+        // Close ResultSet
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Error closing ResultSet", e);
+            }
+        }
+
+        // Close PreparedStatement
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Error closing PreparedStatement", e);
+            }
+        }
+
+        // Close Connection
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Error closing Connection", e);
+            }
+        }
     }
 }

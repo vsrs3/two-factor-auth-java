@@ -3,6 +3,7 @@ package org.tfl.backend;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class LoginServlet
+ * Handles user login first authentication step (username/password)
  */
 @WebServlet("/login")
 public class LoginControllerServlet extends HttpServlet
@@ -25,69 +27,73 @@ public class LoginControllerServlet extends HttpServlet
     public LoginControllerServlet()
     {
         super();
-
     }
 
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
      *      response)
      */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException
     {
-
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain;charset=UTF-8");
         response.setHeader("Cache-Control", "no-store");
 
         HttpSession session = request.getSession(false);
-        if(session == null)
-        {//no existing session
-        	
-        	//TODO Redirect to index.jsp
-       
+        if(session == null) {
+            // No existing session
+            log.warning("No session found for login - " + request.getRemoteAddr());
+            response.sendRedirect("/index.jsp");
+            return;
         }
-        
 
+        // Get login parameters
         String userid = request.getParameter("userid");
         String password = request.getParameter("password");
 
-        if (userid == null || password == null)
-        {
-        	
-        	//TODO Redirect to index.jsp 
-        
-        }
-        
-        if(LoginDAO.isAccountLocked(userid, request.getRemoteAddr()))
-        {
-            log.warning("Error: Account is locked " + userid  + " " + request.getRemoteAddr());
+        // Check if required parameters are present
+        if (userid == null || password == null) {
+            log.warning("Missing login parameters - " + request.getRemoteAddr());
             response.sendRedirect("/index.jsp");
-            
+            return;
         }
 
-        else if (LoginDAO.validateUser(userid, password, request.getRemoteAddr()))
-        {
-            password = null;
-            //Prevent Session fixation, invalidate and assign a new session
-            
-            session.invalidate();
-            session = request.getSession(true);
-            session.setAttribute("userid2fa", userid);
-            //Set the session id cookie with HttpOnly, secure and samesite flags
-            String custsession = "JSESSIONID=" + session.getId() + ";Path=/;Secure;HttpOnly;SameSite=Strict";
-            response.setHeader("Set-Cookie", custsession);
-            
-            //Dispatch request to otp.jsp
+        try {
+            // Check if account is locked
+            if (LoginDAO.isAccountLocked(userid, request.getRemoteAddr())) {
+                log.warning("Login attempt on locked account: " + userid + " - " + request.getRemoteAddr());
+                response.sendRedirect("/locked.html");
+                return;
+            }
 
-        }
-        else
-        {	
-        	log.warning("Error: Username or password is invalid " + userid  + " " + request.getRemoteAddr());
-        	String remoteip = request.getRemoteAddr();
-        	LoginDAO.incrementFailLogin(userid, remoteip);
-        	response.sendRedirect("/index.jsp");
-        }
+            // Validate user credentials
+            if (LoginDAO.validateUser(userid, password, request.getRemoteAddr())) {
+                // Clear sensitive data
+                password = null;
 
+                // Prevent session fixation, invalidate and assign a new session
+                session.invalidate();
+                session = request.getSession(true);
+                session.setAttribute(AppConstants.SESSION_USERID_2FA, userid);
+
+                // Set the session id cookie with HttpOnly, secure and samesite flags
+                String custsession = "JSESSIONID=" + session.getId() + ";Path=/;Secure;HttpOnly;SameSite=Strict";
+                response.setHeader("Set-Cookie", custsession);
+
+                // Dispatch request to OTP page
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/otp.jsp");
+                dispatcher.forward(request, response);
+            } else {
+                // Invalid credentials
+                log.warning("Invalid login credentials: " + userid + " - " + request.getRemoteAddr());
+
+                // Increment fail login count (handled by validateUser)
+                response.sendRedirect("/index.jsp");
+            }
+        } catch (ServletException e) {
+            log.severe("Error during login: " + e.getMessage());
+            response.sendRedirect("/error.html");
+        }
     }
-
 }

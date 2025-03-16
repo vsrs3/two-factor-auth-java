@@ -88,6 +88,9 @@ public class LoginControllerServlet extends HttpServlet
                 // Invalid credentials
                 log.warning("Invalid login credentials: " + userid + " - " + request.getRemoteAddr());
 
+                // Add error message to session
+                session.setAttribute("loginError", "Invalid username or password");
+
                 // Increment fail login count (handled by validateUser)
                 response.sendRedirect("/index.jsp");
             }

@@ -1,5 +1,6 @@
+<%@ page import="org.tfl.backend.HtmlEscape" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8"%>
 <%
 response.setHeader("Cache-Control", "no-store"); 
 %>
@@ -21,6 +22,17 @@ response.setHeader("Cache-Control", "no-store");
 <h3>Application Sign In</h3>
 </div>
 
+    <div id="msg" class="settingmsg">
+        <%
+            // Check for login error
+            String loginError = (String) session.getAttribute("loginError");
+            if (loginError != null) {
+                out.println(HtmlEscape.escapeHTML(loginError));
+                // Remove the message so it doesn't persist after page refresh
+                session.removeAttribute("loginError");
+            }
+        %>
+    </div>
 
 <form method="POST" autocomplete="off" accept-charset="utf-8" action="/login">
 <ul class="form-ul" >

@@ -1,8 +1,6 @@
 package org.tfl.backend;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.logging.Logger;
+import org.tfl.backend.NewsDAO.NewsItem;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,8 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.tfl.backend.NewsDAO.NewsItem;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Servlet for handling news posting and retrieval with Bell-Lapadula security model
@@ -57,7 +56,7 @@ public class NewsControllerServlet extends HttpServlet {
         request.setAttribute("securityLevelName", securityLevelName);
 
         // Forward to news viewing page
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/viewnews.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/news.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -67,6 +66,7 @@ public class NewsControllerServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Rest of the method remains unchanged
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain;charset=UTF-8");
         response.setHeader("Cache-Control", "no-store");
